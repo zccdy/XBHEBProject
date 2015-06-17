@@ -1,0 +1,36 @@
+//
+//  XBHPCH.pch
+//  XBHEBProject
+//
+//  Created by xubh-note on 15/3/18.
+//  Copyright (c) 2015年 xu banghui. All rights reserved.
+//
+
+#ifndef XBHEBProject_XBHPCH_pch
+#define XBHEBProject_XBHPCH_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "XBHUitility.h"
+#import "NSString+XBHStringSize.h"
+#import "UIMacroDefine.h"
+#import "AppDelegate.h"
+#import "XBHNavigationController.h"
+#import "Toast+UIView.h"
+#import "XBHJSONKey.h"
+#import "XBHBackgroundHandler.h"
+
+
+#endif
+
+#endif

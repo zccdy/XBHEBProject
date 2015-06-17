@@ -1,0 +1,6 @@
+platform :ios,'6.0'
+pod 'FMDB','~> 2.5'
+pod 'IQKeyboardManager', '~> 3.2.1.1'
+pod 'AFNetworking', '~> 2.5.1'
+pod 'Masonry', '~> 0.6.1'
+pod 'MBProgressHUD', '~> 0.9'
