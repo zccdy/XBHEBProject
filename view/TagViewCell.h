@@ -33,6 +33,7 @@
 
 @property       (nonatomic,weak)        id<TagViewCellDelegate> delegate;
 
+@property       (nonatomic,strong)      NSString                *mNotifyString;
 +(NSMutableArray *)tagDictArrayWithTitleArray:(NSArray *)tagTitleArray layoutWidth:(CGFloat)maxWidth needHeight:(CGFloat *)height editable:(BOOL)edit;
 
 /**

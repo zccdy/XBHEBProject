@@ -179,7 +179,7 @@
     }
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     cell.misShowShareButton=YES;
-   
+     cell.mRightView.hidden=NO;
     NSDictionary    *dict=[self.mSourceArray objectAtIndex:indexPath.row];
     [cell resetText];
     cell.mProgress=0.0f;
@@ -189,6 +189,9 @@
     
     [cell setFirstText:dict[kJSONItemName] TextColor:CELL_TEXT1_COLOR TextFont:CELL_FIRST_LINE_FONT];
     cell.mStatus=[XBHDownloadShareDocument downloadStatusWithUserId:DefaultUserId DataId:[dict[kJSONItemId] longLongValue] DataType:DefaultDataType];
+    if (cell.mStatus == XBHDownloadStatus_DownloadCompelete) {
+         cell.mRightView.hidden=YES;
+    }
     [cell setIcon:nil imageURL:[XBHNetworking fullUrlWithPartUrl:dict[kJSONItemIconUrl]]];
     
   //  [cell setSecondText:@"上传中" TextColor:CELL_TEXT2_COLOR TextFont:CELL_SECOND_LINE_FONT];

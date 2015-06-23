@@ -18,7 +18,9 @@
 
 #define IOS_SYSTEMVERSION_LATER(_VerStr)  ([[[UIDevice currentDevice] systemVersion] compare:_VerStr] != NSOrderedAscending)
 
+#define XBHScreenHeight             [UIScreen mainScreen].bounds.size.height
 
+#define XBHIphone5Dev_Or_later         (XBHScreenHeight >(568-1) ? YES : NO)
 
 #define XBHMakeRGB(_R,_G,_B) [UIColor colorWithRed:(_R)/255.0 green:(_G)/255.0 blue:(_B)/255.0 alpha:1.0]
 
@@ -43,6 +45,9 @@
 #define XBHSysFont(_V)                  [UIFont systemFontOfSize:_V]
 
 #define XBHBoldSysFont(_V)              [UIFont boldSystemFontOfSize:_V]
+
+
+
 
 @interface XBHUitility : NSObject
 

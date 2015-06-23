@@ -18,7 +18,6 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
 
 @property   (nonatomic,strong)      XBHUploadRequest        *mCurUploadRequest;
 
-@property   (nonatomic,strong)      XBHUploadDoc            *mCurUploadDoc;
 
 @property   (nonatomic,strong)      NSTimer                 *mProgressTimer;
 @end
@@ -77,39 +76,28 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
 }
 
 
--(NSDictionary *)buildRequestUserInfo:(long long)userId DataId:(long long)dataId DataType:(NSUInteger)type DataPath:(NSString *)path{
-    NSMutableDictionary *dict=[NSMutableDictionary dictionary];
-    dict[kXBHHTTPUpload_UserId]=@(userId);
-    dict[kXBHHTTPUpload_DataId]=@(dataId);
-    dict[kXBHHTTPUpload_DataType]=@(type);
-    dict[kXBHHTTPUpload_DataPath]=path;
-   
-   
-    return dict;
-    
-}
 
 
--(void)removeWithUserInfo:(NSDictionary *)userInfo{
-    [_docment deleteOneNoteWithUserId:[userInfo[kXBHHTTPUpload_UserId] longLongValue] DataId:[[userInfo objectForKey:kXBHHTTPUpload_DataId] longLongValue] DataType:[userInfo[kXBHHTTPUpload_DataType] unsignedIntegerValue] ];
+
+-(void)removeWithUploadDoc:(XBHUploadDoc *)doc{
+    [_docment deleteOneNoteWithUserId:doc.UserId DataId:doc.DataId DataType:doc.DataType];
 }
 
 
 
 
--(void)setUploadStatusWithUserInfo:(NSDictionary *)userInfo Status:(XBHUploadStatus)status{
-    [_docment setUploadStatusWithUserId:[userInfo[kXBHHTTPUpload_UserId] longLongValue] DataId:[[userInfo objectForKey:kXBHHTTPUpload_DataId] longLongValue] DataType:[userInfo[kXBHHTTPUpload_DataType] unsignedIntegerValue] UploadStatus:status];
+-(void)setUploadStatusWithUploadDoc:(XBHUploadDoc *)doc Status:(XBHUploadStatus)status{
+    [_docment setUploadStatusWithUserId:doc.UserId DataId:doc.DataId DataType:doc.DataType UploadStatus:status];
 }
 
 #pragma mark -
 
--(void)notifyRequestStatusWithRequestUserInfo:(NSDictionary *)userInfo Status:(XBHUploadStatus)status Progress:(CGFloat)progress{
+-(void)notifyRequestStatusWithUploadDoc:(XBHUploadDoc *)doc Status:(XBHUploadStatus)status Progress:(CGFloat)progress{
     
-    NSMutableDictionary   *dict=[NSMutableDictionary dictionaryWithDictionary:userInfo];
-    dict[kXBHHTTPUpload_Status]=@(status);
-    dict[kXBHHTTPUpload_Progress]=@(progress);
-   
-    [[NSNotificationCenter defaultCenter] postNotificationName:XBHHTTPUploadNotify object:self userInfo:dict];
+    doc.UploadStatus=status;
+    doc.Progress=progress;
+ 
+    [[NSNotificationCenter defaultCenter] postNotificationName:XBHHTTPUploadNotify object:doc userInfo:nil];
     
 }
 
@@ -131,12 +119,7 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
 }
 -(void)UploadAllRequestCompeleteNotify{
     //通知全部下载完
-    NSMutableDictionary   *dict=[NSMutableDictionary dictionary];
-    [dict setObject:[NSNumber numberWithLongLong:self.userId] forKey:kXBHHTTPUpload_UserId];
-    [dict setObject:[NSNumber numberWithInteger:XBHUploadStatus_UploadCompelete] forKey:kXBHHTTPUpload_Status];
-    [dict setObject:[NSNumber numberWithFloat:1.0] forKey:kXBHHTTPUpload_Progress];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:XBHHTTPUploadAllRequestCompeleteNotify object:self userInfo:dict];
+    [[NSNotificationCenter defaultCenter] postNotificationName:XBHHTTPUploadAllRequestCompeleteNotify object:self userInfo:nil];
     
 }
 
@@ -216,22 +199,24 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
             req.requestArgument=[NSJSONSerialization JSONObjectWithData:doc.DataReferenceInfo options:NSJSONReadingMutableContainers error:nil];
             
         }
+        /*
         NSDictionary *userInfo=[self buildRequestUserInfo:doc.UserId DataId:doc.DataId DataType:doc.DataType DataPath:doc.DataSoucrePath];
         req.userInfo=userInfo;
-        [self XBHUploadRequestWillStart:userInfo];
+         */
+        req.object=doc;
+        [self XBHUploadRequestWillStart:doc];
         [req startWithCompletionBlockWithSuccess:^(XBHBackgroundRequest *request) {
             XBHStrongSelf;
-            [strongSelf XBHUploadRequestSuccessed:request.userInfo];
+            [strongSelf XBHUploadRequestSuccessed:request.object];
             
         } failure:^(XBHBackgroundRequest *request) {
             XBHStrongSelf;
-            [strongSelf XBHUploadRequestFailed:request.userInfo];
+            [strongSelf XBHUploadRequestFailed:request.object];
         }];
         
         
         self.mCurUploadRequest=req;
-        self.mCurUploadDoc=doc;
-      
+
         self.mProgressTimer=[NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(getProgress) userInfo:nil repeats:YES];
     }
     return rn;
@@ -250,12 +235,12 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
     }
     NSProgress *pro=[self.mCurUploadRequest uploadProgress];
     if (pro) {
-        NSDictionary *userInfo=self.mCurUploadRequest.userInfo;
+        XBHUploadDoc *doc=self.mCurUploadRequest.object;
         CGFloat progress=(CGFloat)pro.completedUnitCount/pro.totalUnitCount;
         if (progress >0.000001
             &&progress<1.01) {
-            [_docment setProgress:progress UserId:[[userInfo objectForKey:kXBHHTTPUpload_UserId] longLongValue] DataId:[[userInfo objectForKey:kXBHHTTPUpload_DataId] longLongValue] DataType:[[userInfo objectForKey:kXBHHTTPUpload_DataType] longValue] ];
-            [self notifyRequestStatusWithRequestUserInfo:userInfo Status:XBHUploadStatus_Uploading Progress:progress];
+            [_docment setProgress:progress UserId:doc.UserId DataId:doc.DataId DataType:doc.DataType];
+            [self notifyRequestStatusWithUploadDoc:doc Status:XBHUploadStatus_Uploading Progress:progress];
         }
 
         
@@ -264,25 +249,25 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
 }
 #pragma mark-
 
--(void)XBHUploadRequestWillStart:(NSDictionary *)userInfo{
-    [self setUploadStatusWithUserInfo:userInfo Status:XBHUploadStatus_Uploading];
-    [self notifyRequestStatusWithRequestUserInfo:userInfo Status:XBHUploadStatus_Uploading Progress:0];
+-(void)XBHUploadRequestWillStart:(XBHUploadDoc *)doc{
+    [self setUploadStatusWithUploadDoc:doc Status:XBHUploadStatus_Uploading];
+    [self notifyRequestStatusWithUploadDoc:doc Status:XBHUploadStatus_Uploading Progress:0];
 }
 
--(void)XBHUploadRequestFailed:(NSDictionary *)userInfo{
+-(void)XBHUploadRequestFailed:(XBHUploadDoc *)doc{
     //提示外面失败
-    [self setUploadStatusWithUserInfo:userInfo Status:XBHUploadStatus_UploadFailure];
-    [self notifyRequestStatusWithRequestUserInfo:userInfo Status:XBHUploadStatus_UploadFailure Progress:0];
+    [self setUploadStatusWithUploadDoc:doc Status:XBHUploadStatus_UploadFailure];
+    [self notifyRequestStatusWithUploadDoc:doc Status:XBHUploadStatus_UploadFailure Progress:0];
     
     //继续下一个
-    [self goNextUploadWithUserId:[[userInfo objectForKey:kXBHHTTPUpload_UserId] longLongValue]];
+    [self goNextUploadWithUserId:doc.UserId];
 }
 
--(void)XBHUploadRequestSuccessed:(NSDictionary *)userInfo{
-    [self setUploadStatusWithUserInfo:userInfo Status:XBHUploadStatus_UploadCompelete];
-    [self notifyRequestStatusWithRequestUserInfo:userInfo Status:XBHUploadStatus_UploadCompelete Progress:1.0];
+-(void)XBHUploadRequestSuccessed:(XBHUploadDoc *)doc{
+    [self setUploadStatusWithUploadDoc:doc Status:XBHUploadStatus_UploadCompelete];
+    [self notifyRequestStatusWithUploadDoc:doc Status:XBHUploadStatus_UploadCompelete Progress:1.0];
     //继续下一个
-    [self goNextUploadWithUserId:[[userInfo objectForKey:kXBHHTTPUpload_UserId] longLongValue]];
+    [self goNextUploadWithUserId:doc.UserId];
 }
 
 
@@ -335,12 +320,6 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
     
 }
 
--(XBHUploadDoc *)currentUploadDoc{
-
-    return self.mCurUploadDoc;
-
-}
-
 -(void)UploadContinue{
     
     if (![self isRequesting]) {
@@ -357,7 +336,7 @@ NSString * const XBHHTTPUploadAllRequestCompeleteNotify=@"XBHHTTPUploadAllReques
         [self.mCurUploadRequest stop];
         self.mCurUploadRequest=nil;
     }
-    self.mCurUploadDoc=nil;
+   
 }
 
 @end

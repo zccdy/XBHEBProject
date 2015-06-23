@@ -98,9 +98,9 @@
 @implementation TagViewCell
 {
     NSMutableArray      *tagDictArray;
-
+    UILabel             *_notifyLabel;
 }
-
+@synthesize mNotifyString=_mNotifyString;
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
@@ -112,7 +112,13 @@
     self = [super initWithStyle:style reuseIdentifier:iden];
     if (self) {
         tagDictArray=[NSMutableArray array];
-        
+        _notifyLabel=[[UILabel alloc] init];
+        _notifyLabel.text=_mNotifyString;
+        _notifyLabel.textAlignment=NSTextAlignmentCenter;
+        _notifyLabel.font=XBHSysFont(14);
+        _notifyLabel.textColor=[UIColor lightGrayColor];
+        [self.contentView addSubview:_notifyLabel];
+
     }
     return self;
 }
@@ -204,6 +210,7 @@
     [self clearButton];
     
     if (tagTitleArray) {
+        
         tagDictArray=[TagViewCell tagDictArrayWithTitleArray:tagTitleArray layoutWidth:maxWidth needHeight:NULL editable:edit];
       
 
@@ -221,12 +228,27 @@
             
         }];
         
+        _notifyLabel.hidden=YES;
         [self setNeedsLayout];
     }
     
 }
 
-
+-(void)setMNotifyString:(NSString *)mNotifyString{
+    if (mNotifyString != _mNotifyString) {
+        _mNotifyString=mNotifyString;
+        
+    }
+    
+    if ([_mNotifyString length]) {
+        _notifyLabel.text=_mNotifyString;
+        [self setNeedsLayout];
+    }
+    else{
+        _notifyLabel.hidden=YES;
+    }
+    
+}
 
 -(void)buttonPress:(TagButton *)button{
     if ([self.delegate respondsToSelector:@selector(TagViewCell:DidSelectString:editable:)]) {
@@ -239,6 +261,14 @@
 -(void)tagButtonDelete:(TagButton *)button{
     [self buttonPress:button];
 
+}
+
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
+    if (_notifyLabel.hidden==NO) {
+        _notifyLabel.frame=CGRectMake(0, (CGRectGetHeight(self.contentView.bounds)-20)/2, CGRectGetWidth(self.contentView.bounds), 20);
+    }
 }
 
 @end

@@ -13,6 +13,7 @@
 #import "DocTypeViewController.h"
 #import "TagListViewController.h"
 #import "fileUploadHeaderView.h"
+#import "TransferListViewController.h"
 #pragma mark -
 
 
@@ -208,7 +209,14 @@
 
     [self startUploadWithParams:nil];
     
-    [self.navigationController popViewControllerAnimated:YES];
+ //   [self.navigationController popViewControllerAnimated:YES];
+    
+
+    NSMutableArray  *newArray=[NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    [newArray removeObject:self];
+    [newArray addObject:[[TransferListViewController alloc] init]];
+    [self.navigationController setViewControllers:newArray animated:YES];
+    
 }
 
 

@@ -17,11 +17,11 @@
 
 #import "UploadFileEditViewController.h"
 
-#define UploadButtonW           (60)
+#define UploadButtonW           (48)
 
-#define UploadButtonH           UploadButtonW
+#define UploadButtonH           (48)
 
-#define UploadTopOffset         (50)
+#define UploadTopOffset         (100)
 
 #define ProgressViewOffsetX     (25)
 
@@ -57,7 +57,7 @@
     button1.titleLabel.font=XBHSysFont(15);
     [button1 addTarget:self action:@selector(imageUpload) forControlEvents:UIControlEventTouchUpInside];
     button1.layer.masksToBounds=YES;
-    button1.layer.cornerRadius=UploadButtonW/2;
+    button1.layer.cornerRadius=XBHCornerRadius;//UploadButtonW/2;
     
     
     UIButton   *button2=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -74,7 +74,7 @@
     [button3 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     button3.titleLabel.font=XBHSysFont(15);
     [button3 addTarget:self action:@selector(canmeraUpload) forControlEvents:UIControlEventTouchUpInside];
-    button3.layer.cornerRadius=UploadButtonW/2;
+    button3.layer.cornerRadius=XBHCornerRadius;//UploadButtonW/2;
     
     _uploadFileNameLabel=[[UILabel alloc] init];
     _uploadFileNameLabel.opaque=NO;
@@ -97,20 +97,21 @@
     [self.view addSubview:_uploadFileNameLabel];
     [self.view addSubview:_progressView];
     
+   
     
-    CGFloat     space=(CGRectGetWidth(self.view.bounds)-2*UploadButtonW)/3;
     
     [button1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_top).mas_equalTo(UploadTopOffset);
-        make.left.equalTo(self.view.mas_left).mas_equalTo(space);
-        make.size.mas_equalTo(CGSizeMake(UploadButtonW, UploadButtonH));
+        make.left.equalTo(self.view.mas_left).mas_equalTo(25);
+        make.right.equalTo(self.view.mas_right).mas_equalTo(-25);
+        make.height.mas_equalTo(UploadButtonH);
         
     }];
     
     [button3 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(button1.mas_top).mas_equalTo(0);
-        make.left.equalTo(button1.mas_right).mas_equalTo(space);
-        make.size.mas_equalTo(CGSizeMake(UploadButtonW, UploadButtonH));
+        make.top.equalTo(button1.mas_bottom).mas_equalTo(50);
+        make.left.and.right.equalTo(button1);
+        make.height.mas_equalTo(button1.mas_height);
         
     }];
 /*视频
@@ -151,12 +152,12 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCallBack:) name:XBHHTTPUploadNotify object:nil];
+  //  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCallBack:) name:XBHHTTPUploadNotify object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+  //  [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self uploadProgressHidden];
 }
 
@@ -226,10 +227,10 @@
 #pragma mark ---
 
 -(void)uploadCallBack:(NSNotification *)notify{
-    NSDictionary    *userInfo=[notify userInfo];
-    XBHUploadStatus status=[userInfo[kXBHHTTPUpload_Status] unsignedIntegerValue];
-    CGFloat         progress=[userInfo[kXBHHTTPUpload_Progress] floatValue];
-    NSString        *path=userInfo[kXBHHTTPUpload_DataPath];
+    XBHUploadDoc    *doc=[notify object];
+    XBHUploadStatus status=doc.UploadStatus;
+    CGFloat         progress=doc.Progress;
+    NSString        *path=doc.DataSoucrePath;
     NSString        *fileName=nil;
     if ([path length]) {
         fileName=[path lastPathComponent];

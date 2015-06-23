@@ -202,13 +202,13 @@
 #pragma mark ---
 
 -(void)uploadCallBack:(NSNotification *)notify{
-    NSDictionary    *userInfo=[notify userInfo];
-    XBHUploadStatus status=[userInfo[kXBHHTTPUpload_Status] unsignedIntegerValue];
-    CGFloat         progress=[userInfo[kXBHHTTPUpload_Progress] floatValue];
-    NSString        *path=userInfo[kXBHHTTPUpload_DataPath];
+    XBHUploadDoc    *doc=[notify object];
+    XBHUploadStatus status=doc.UploadStatus;
+    CGFloat         progress=doc.Progress;
+    NSString        *path=doc.DataSoucrePath;
     NSString        *fileName=nil;
-    long long       dataid=[userInfo[kXBHHTTPUpload_DataId] longLongValue];
-    NSUInteger      datatype=[userInfo[kXBHHTTPUpload_DataType] unsignedIntegerValue];
+    long long       dataid=doc.DataId;
+   
     if ([path length]) {
         fileName=[path lastPathComponent];
     }
@@ -219,22 +219,18 @@
     if (status == XBHUploadStatus_Uploading) {
         if (!self.mCurUploadDoc
             ||self.mCurUploadDoc.DataId!=dataid) {
-            self.mCurUploadDoc=[[XBHUploadDoc alloc] init];
-            self.mCurUploadDoc.DataId=dataid;
-            self.mCurUploadDoc.DataType=datatype;
-            self.mCurUploadDoc.DataSoucrePath=path;
-            self.mCurUploadDoc.IconData=[XBHUploadShareDocument iconDataWithUserId:DefaultUserId DataId:dataid DataType:datatype];
+            self.mCurUploadDoc=doc;
             isRefresh=YES;
             
             noDataNotifyLabel.hidden=YES;
         }
         
-        self.mCurUploadDoc.Progress=progress;
-        self.mCurUploadDoc.UploadStatus=status;
+        
         TransferViewCell *cell=(TransferViewCell*)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
         if (cell) {
             if (cell.mStatus !=XBHUploadStatus_Uploading) {
                 cell.mStatus=XBHUploadStatus_Uploading;
+                [cell setSecondText:@"上传中" TextColor:CELL_TEXT2_COLOR TextFont:CELL_SECOND_LINE_FONT];
             }
             [cell setProgress:progress animated:YES];
         }
@@ -244,7 +240,7 @@
         isRefresh=YES;
     }
     else if (status == XBHUploadStatus_UploadFailure){
-        [self.view makeToast:[NSString stringWithFormat:@"%@ 下载失败!",fileName] DownMoveToCenterDuration:0.5 NotifyAppearDelay:0 HideDelay:2.0];
+        [self.view makeToast:[NSString stringWithFormat:@"%@ 上传失败!",fileName] DownMoveToCenterDuration:0.5 NotifyAppearDelay:0 HideDelay:2.0];
         self.mCurUploadDoc=nil;
         isRefresh=YES;
     }
@@ -286,6 +282,7 @@
 #pragma mark - TransferViewCellDelegate
 
 -(void)TransferViewCellStatusViewDidSelecte:(TransferViewCell *)cell{
+#if 0
     if (cell.mStatus == XBHUploadStatus_Uploading){
         cell.mStatus = XBHUploadStatus_UploadPause_ByUser;
         [XBHUploadShareManager pauseRequestWithDataId:cell.mDataId DataType:cell.mDataType];
@@ -304,7 +301,7 @@
         //重新上传 /移除
         
     }
-    
+#endif
 }
 -(void)TransferViewCellShareDidSelecte:(TransferViewCell *)cell{
     // 分享

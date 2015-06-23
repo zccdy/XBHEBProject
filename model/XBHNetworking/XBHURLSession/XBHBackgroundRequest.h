@@ -59,6 +59,8 @@ typedef NS_ENUM(NSUInteger, XBHBackgroundRequestType){
 //第一项 用户名 第二项 密码
 @property   (nonatomic,strong)    NSArray                       *requestAuthorizationHeaderFieldArray;
 
+@property   (nonatomic,strong)  id               object;
+
 @property (nonatomic, copy) void (^successCompletionBlock)(XBHBackgroundRequest *);
 
 @property (nonatomic, copy) void (^failureCompletionBlock)(XBHBackgroundRequest *);

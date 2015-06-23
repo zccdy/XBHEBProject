@@ -268,6 +268,7 @@
     if (!cell) {
         cell=[[TagViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifier];
         cell.delegate=self;
+        cell.mNotifyString=@"编辑或选择查询标签";
     }
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     cell.tag=indexPath.section;
@@ -286,10 +287,17 @@
 
 
 -(void)addToSearchArray:(NSString *)text{
+    if ([_seachTagArray count]<6) {
+        if (![_seachTagArray containsObject:text]) {
+            [_seachTagArray addObject:text];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        }
 
-    if (![_seachTagArray containsObject:text]) {
-        [_seachTagArray addObject:text];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+    }
+    else{
+        UIAlertView    *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"查询标签最多6个" delegate:nil cancelButtonTitle:@"好" otherButtonTitles:nil, nil];
+        [alert show];
+    
     }
 
 }

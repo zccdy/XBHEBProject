@@ -161,6 +161,7 @@
     if (!cell) {
         cell=[[TagViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifier];
         cell.delegate=self;
+        cell.mNotifyString=@"编辑或选择文档标签";
     }
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     cell.tag=indexPath.section;
@@ -180,9 +181,17 @@
 
 -(void)addToSearchArray:(NSString *)text{
     
-    if (![_aleardySelecteTags containsObject:text]) {
-        [_aleardySelecteTags addObject:text];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+    if ([_aleardySelecteTags count]<6) {
+        if (![_aleardySelecteTags containsObject:text]) {
+            [_aleardySelecteTags addObject:text];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        }
+        
+    }
+    else{
+        UIAlertView    *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"最多选择6个标签" delegate:nil cancelButtonTitle:@"好" otherButtonTitles:nil, nil];
+        [alert show];
+        
     }
     
 }

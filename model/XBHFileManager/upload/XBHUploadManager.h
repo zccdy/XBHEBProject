@@ -14,7 +14,7 @@ extern NSString * const XBHHTTPUploadNotify;
 
 extern NSString * const XBHHTTPUploadAllRequestCompeleteNotify;
 
-
+/*
 #define kXBHHTTPUpload_UserId        @"userId"
 #define kXBHHTTPUpload_DataId        @"dataId"
 #define kXBHHTTPUpload_DataType      @"dataType"
@@ -22,7 +22,7 @@ extern NSString * const XBHHTTPUploadAllRequestCompeleteNotify;
 #define kXBHHTTPUpload_Status        @"status"
 #define kXBHHTTPUpload_Progress      @"progress"
 
-
+*/
 
 
 #define XBHUploadShareManager         [XBHUploadManager shareInstance]
@@ -58,5 +58,5 @@ extern NSString * const XBHHTTPUploadAllRequestCompeleteNotify;
 -(void)UploadContinue;
 -(void)cancelNetwork;
 
--(XBHUploadDoc *)currentUploadDoc;
+
 @end

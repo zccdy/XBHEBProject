@@ -32,7 +32,7 @@
 
 #define     XBHUIPageColor              XBHMakeRGB(125.0, 132.0, 142.0)
 
-#define     XBHScreenHeight             [UIScreen mainScreen].bounds.size.height
+
 
 #define     XBHButtonColor              XBHMakeRGB(0, 161.0, 217.0)
 

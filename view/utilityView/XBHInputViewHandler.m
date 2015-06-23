@@ -358,7 +358,6 @@
 #pragma mark   -- textFieldDelegate
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    
     return YES;
     
 }
