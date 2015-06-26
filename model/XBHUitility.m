@@ -787,4 +787,27 @@
 }
 
 
+
+
++(UITextField *)createTextfieldWithTextColor:(UIColor *)color font:(UIFont *)font placeholderColor:(UIColor *)pcolor placeholder:(NSString *)place{
+   
+     UITextField * _field=[[UITextField alloc] init];
+    _field.backgroundColor = [UIColor clearColor];
+    _field.keyboardType = UIKeyboardTypeDefault;
+    _field.font =font;
+    _field.autocorrectionType = UITextAutocorrectionTypeNo;
+    _field.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    _field.returnKeyType = UIReturnKeyDone;
+    _field.clearButtonMode = UITextFieldViewModeWhileEditing;
+    _field.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _field.textAlignment=NSTextAlignmentCenter;
+    _field.textColor=color;
+    _field.enablesReturnKeyAutomatically=YES;
+
+    _field.attributedPlaceholder=[[NSAttributedString alloc] initWithString:place attributes:@{NSFontAttributeName:font,NSForegroundColorAttributeName:pcolor}];
+    
+    return _field;
+}
+
+
 @end

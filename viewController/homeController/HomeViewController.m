@@ -86,6 +86,24 @@
     self.delegate=self;
     
     self.title=c1.title;
+    
+    
+    
+    UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tappedRightButton:)];
+    
+    [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+    
+    [self.view addGestureRecognizer:swipeLeft];
+    
+    
+    
+    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(tappedLeftButton:)];
+    
+    [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
+    
+    [self.view addGestureRecognizer:swipeRight];
+    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -111,6 +129,72 @@
     return YES;
 }
 
+#pragma mark -
 
+
+
+- (IBAction) tappedRightButton:(id)sender
+
+{
+    
+    NSUInteger selectedIndex = [self selectedIndex];
+    
+    
+    
+    NSArray *aryViewController = self.viewControllers;
+    
+    if (selectedIndex < aryViewController.count - 1) {
+        
+        
+        UIView *fromView = [self.selectedViewController view];
+        
+        UIViewController *toViewController = [self.viewControllers objectAtIndex:selectedIndex +1] ;
+        
+        [UIView transitionFromView:fromView toView:toViewController.view duration:0.5f options:UIViewAnimationOptionTransitionCrossDissolve completion:^(BOOL finished) {
+            
+            if (finished) {
+                
+                [self setSelectedIndex:selectedIndex +1];
+                 self.title=toViewController.title;
+            }
+            
+        }];
+        
+    }
+    
+    
+    
+}
+
+
+
+- (IBAction) tappedLeftButton:(id)sender
+
+{
+    
+    NSUInteger selectedIndex = [self selectedIndex];
+    
+    
+    
+    if (selectedIndex > 0) {
+        
+        UIView *fromView = [self.selectedViewController view];
+        
+        UIViewController *toViewController = [self.viewControllers objectAtIndex:selectedIndex - 1] ;
+        
+        [UIView transitionFromView:fromView toView:toViewController.view duration:0.5f options:UIViewAnimationOptionTransitionCrossDissolve completion:^(BOOL finished) {
+            
+            if (finished) {
+                
+                [self setSelectedViewController:toViewController];
+                self.title=toViewController.title;
+            }
+            
+        }];
+        
+    }
+    
+    
+}
 
 @end

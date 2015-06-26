@@ -138,4 +138,8 @@
 //uicolor
 + (UIColor *) colorWithHexString: (NSString *)color;
 
+
+//textfield
++(UITextField *)createTextfieldWithTextColor:(UIColor *)color font:(UIFont *)font placeholderColor:(UIColor *)pcolor placeholder:(NSString *)place;
+
 @end

@@ -327,6 +327,10 @@
 #pragma mark -
 
 -(void)SeacherLabelButtonPress{
+    if ([_seachTagArray count]<1) {
+        [XBHUitility showNotifyMessage:@"请编辑或选择查询标签！" title:@"提示"];
+        return;
+    }
     XBHStartActivityWithView(self.view);
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
     [self performSelector:@selector(queryEnd) withObject:nil afterDelay:1.5];

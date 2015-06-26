@@ -14,7 +14,7 @@
 
 #import "ModifyPasswordViewController.h"
 
-
+#import "LoginViewController.h"
 
 
 
@@ -243,7 +243,16 @@ static NSString    *identifier=@"myCells";
 
 -(void)loginOutEnd{
     XBHStopActivityWithView(self.view);
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    
+    NSMutableArray  *newArray=[NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+  NSUInteger index= [newArray indexOfObject:self];
+    if (index !=NSNotFound) {
+        [newArray replaceObjectAtIndex:index withObject:[[LoginViewController alloc] init]];
+        [self.navigationController setViewControllers:newArray animated:YES];
+    }
+    
+    
 }
 
 

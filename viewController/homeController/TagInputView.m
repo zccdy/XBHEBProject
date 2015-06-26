@@ -25,24 +25,15 @@
         
         self.userInteractionEnabled=YES;
         self.opaque=NO;
-        _field=[[UITextField alloc] init];
+        _field=[XBHUitility createTextfieldWithTextColor:[UIColor whiteColor] font:XBHSysFont(13) placeholderColor:[UIColor lightGrayColor] placeholder:@"编辑标签"];
         _field.backgroundColor = [UIColor clearColor];
-        _field.keyboardType = UIKeyboardTypeDefault;
-        _field.font = XBHSysFont(13);
-        _field.placeholder = @"编辑标签";
-        _field.autocorrectionType = UITextAutocorrectionTypeNo;
-        _field.autocapitalizationType = UITextAutocapitalizationTypeNone;
-         _field.returnKeyType = UIReturnKeyDone;
-        _field.clearButtonMode = UITextFieldViewModeWhileEditing;
-        _field.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-        _field.textAlignment=NSTextAlignmentCenter;
         _field.layer.masksToBounds=YES;
         _field.layer.cornerRadius=6.0;
         _field.layer.borderColor=XBHSeparatorColor.CGColor;
         _field.layer.borderWidth=1;
         _field.delegate=self;
-        _field.textColor=[UIColor whiteColor];
-        _field.enablesReturnKeyAutomatically=YES;
+
+       
         [self addSubview:_field];
         
         UIButton    *bt=[UIButton buttonWithType:UIButtonTypeCustom];

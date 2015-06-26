@@ -84,16 +84,11 @@
         
         for (NSUInteger i=0; i<count; i++) {
             XBHInputViewItem    *item=[items objectAtIndex:i];
-            UITextField * _inputView=[[UITextField alloc] init];
+            UITextField * _inputView=[XBHUitility createTextfieldWithTextColor:[UIColor whiteColor] font:XBHSysFont(15) placeholderColor:[UIColor lightGrayColor] placeholder:item.mplaceholder];
             //完成按钮事件
             [_inputView addDoneOnKeyboardWithTarget:self action:@selector(IQKeyboardDoneButtonPress:)];
             //  _inputField.delegate = self;
             _inputView.opaque=NO;
-            _inputView.keyboardType = UIKeyboardTypeDefault;
-            _inputView.font = [UIFont systemFontOfSize:15];
-            _inputView.placeholder =item.mplaceholder;
-            _inputView.autocorrectionType = UITextAutocorrectionTypeNo;
-            _inputView.autocapitalizationType = UITextAutocapitalizationTypeNone;
             
             /*
             if (i <count-1
@@ -104,8 +99,7 @@
                 _inputView.returnKeyType = UIReturnKeyDone;
             }
              */
-            _inputView.clearButtonMode = UITextFieldViewModeWhileEditing;
-            _inputView.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+           
             _inputView.textAlignment=NSTextAlignmentLeft;
             [superController.view addSubview:_inputView];
             [_textFieldArray addObject:_inputView];
@@ -169,17 +163,9 @@
 
 -(UITextField *)authCodeInputField{
 
-   UITextField* _inputField=[[UITextField alloc] init];
+   UITextField* _inputField=[XBHUitility createTextfieldWithTextColor:[UIColor whiteColor] font:XBHSysFont(15) placeholderColor:[UIColor lightGrayColor] placeholder:@"请输入验证码"];
     //  _inputField.delegate = self;
-    _inputField.backgroundColor = [UIColor clearColor];
-    _inputField.keyboardType = UIKeyboardTypeDefault;
-    _inputField.font = [UIFont systemFontOfSize:15];
-    _inputField.placeholder = @"请输入验证码";
-    _inputField.autocorrectionType = UITextAutocorrectionTypeNo;
-    _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-   // _inputField.returnKeyType = UIReturnKeyDone;
-    _inputField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    _inputField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    
     _inputField.textAlignment=NSTextAlignmentLeft;
     
     [_textFieldArray addObject:_inputField];

@@ -62,6 +62,9 @@
 }
 
 -(void)loadListSource{
+    
+    self.mCurUploadDoc=[XBHUploadShareDocument oneXBHUploadDocWithUploadStatus:XBHUploadStatus_UploadWate UserId:DefaultUserId];
+    
     NSArray *array=[XBHUploadShareDocument XBHUploadDocListWithUploadStatus:XBHUploadStatus_UploadWate UserId:DefaultUserId];
     
     NSArray *pauseArray=[XBHUploadShareDocument XBHUploadDocListBettwenBeginStatus:XBHUploadStatus_UploadPause_ByUser EndStatus:XBHUploadStatus_UploadPause_ByApp UserId:DefaultUserId];
